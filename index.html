@@ -572,28 +572,34 @@
             max-width: 52px !important;
             margin: 0 !important;
             --md-switch-state-layer-size: 40px;
+            /* Chấm tròn luôn bằng nhau (bật / tắt / nhấn): 24px, bên trong có icon */
+            --md-switch-selected-handle-width: 24px; --md-switch-selected-handle-height: 24px;
+            --md-switch-unselected-handle-width: 24px; --md-switch-unselected-handle-height: 24px;
+            --md-switch-pressed-handle-width: 24px; --md-switch-pressed-handle-height: 24px;
+            --md-switch-selected-hover-handle-width: 24px; --md-switch-selected-hover-handle-height: 24px;
+            --md-switch-unselected-hover-handle-width: 24px; --md-switch-unselected-hover-handle-height: 24px;
+            --md-switch-selected-focus-handle-width: 24px; --md-switch-selected-focus-handle-height: 24px;
+            --md-switch-unselected-focus-handle-width: 24px; --md-switch-unselected-focus-handle-height: 24px;
+            --md-switch-selected-pressed-handle-width: 24px; --md-switch-selected-pressed-handle-height: 24px;
+            --md-switch-unselected-pressed-handle-width: 24px; --md-switch-unselected-pressed-handle-height: 24px;
+            --md-switch-selected-icon-size: 16px; --md-switch-unselected-icon-size: 16px;
             --md-switch-duration: 500ms;
             --md-switch-easing: cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         md-switch [slot="on-icon"], md-switch [slot="off-icon"] {
-            font-size: calc(14px * var(--font-scale-factor, 1)) !important;
-            width: 14px !important;
-            height: 14px !important;
-            font-weight: 300 !important;
+            font-size: 16px !important;
+            width: 16px !important;
+            height: 16px !important;
+            font-weight: 500 !important;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        md-switch:not([selected]) [slot="off-icon"] {
-            transform: scale(0.95) rotate(-10deg);
-        }
-
-        md-switch[selected] [slot="on-icon"] {
-            transform: scale(1.1) rotate(10deg);
-        }
+        md-switch:not([selected]) [slot="off-icon"] { transform: rotate(-10deg); }
+        md-switch[selected] [slot="on-icon"] { transform: rotate(10deg); }
 
         /* --- STREAMING_CHUNK:Designing bounce dots and marquee containers... --- */
         .bouncing-dots { display: inline-flex; align-items: flex-end; justify-content: center; height: 1em; gap: 4px; }
@@ -1077,6 +1083,9 @@
         .st-pane.active { display: flex; }
         .st-pane-title { margin: 0; font-size: calc(22px * var(--font-scale-factor, 1)); font-weight: 700; font-family: var(--app-font); }
         .st-pane > div:last-child { border-bottom: none !important; padding-bottom: 0 !important; }
+        .mx-band { display:flex; align-items:center; gap:12px; }
+        .mx-band-l { width:64px; font-size: calc(13px * var(--font-scale-factor, 1)); opacity:.7; flex-shrink:0; }
+        .mx-band-v { width:56px; text-align:right; font-size: calc(13px * var(--font-scale-factor, 1)); font-weight:700; flex-shrink:0; }
         .st-pane-about { padding: 0; gap: 0; flex: 1; min-height: 0; }
         .st-pane-about .cl-header { padding: 12px 20px; }
         .st-pane-about .cl-iframe-wrap { flex: 1; min-height: 0; }
@@ -1345,6 +1354,7 @@
                     <button class="st-tab active" data-tab="general"><span class="material-symbols-outlined">tune</span><span data-i18n="settings.cat_general">Chung</span></button>
                     <button class="st-tab" data-tab="appearance"><span class="material-symbols-outlined">palette</span><span data-i18n="settings.cat_appearance">Giao diện</span></button>
                     <button class="st-tab" data-tab="lyrics"><span class="material-symbols-outlined">lyrics</span><span data-i18n="settings.cat_lyrics">Lyric</span></button>
+                    <button class="st-tab" data-tab="mixer"><span class="material-symbols-outlined">equalizer</span><span data-i18n="settings.cat_mixer">Bộ trộn âm thanh</span></button>
                     <button class="st-tab" data-tab="performance"><span class="material-symbols-outlined">speed</span><span data-i18n="settings.cat_performance">Hiệu năng & hiệu ứng</span></button>
                     <div class="st-tab-spacer"></div>
                     <button class="st-tab" data-tab="about"><span class="material-symbols-outlined">info</span><span data-i18n="about.title">About</span></button>
@@ -1369,7 +1379,7 @@
                         <span style="font-size: calc(16px * var(--font-scale-factor, 1)); font-weight: 700;" data-i18n="settings.wake_lock">Luôn bật màn hình khi ở Fullscreen mode</span>
                         <span style="font-size: calc(12px * var(--font-scale-factor, 1)); opacity: 0.6;" data-i18n="settings.wake_lock_desc">Giữ màn hình không tự tắt/khoá trong lúc đang ở chế độ Full screen, để bạn xem lyric hoặc album art mà không bị gián đoạn. Tự tắt tính năng này ngay khi thoát Full screen.</span>
                     </div>
-                    <md-switch id="setting-wake-lock">
+                    <md-switch icons id="setting-wake-lock">
                         <span class="material-symbols-outlined" slot="on-icon">check</span>
                         <span class="material-symbols-outlined" slot="off-icon">close</span>
                     </md-switch>
@@ -1417,7 +1427,7 @@
                         <span style="font-size: calc(16px * var(--font-scale-factor, 1)); font-weight: 700;" data-i18n="settings.dynamic_accent">Thay đổi màu chủ đạo dựa trên bài đang phát</span>
                         <span style="font-size: calc(12px * var(--font-scale-factor, 1)); opacity: 0.6;" data-i18n="settings.dynamic_accent_desc">Phân tích ảnh bìa (album art) của bài đang phát để lấy màu nổi bật nhất làm màu chủ đạo cho toàn bộ giao diện, kể cả thanh tiêu đề và PiP. Tự trả về màu bạn đã chọn khi bài không có ảnh bìa hoặc nhạc dừng quá 10 giây.</span>
                     </div>
-                    <md-switch id="setting-dynamic-accent">
+                    <md-switch icons id="setting-dynamic-accent">
                         <span class="material-symbols-outlined" slot="on-icon">check</span>
                         <span class="material-symbols-outlined" slot="off-icon">close</span>
                     </md-switch>
@@ -1466,7 +1476,7 @@
                         <span style="font-size: calc(16px * var(--font-scale-factor, 1)); font-weight: 700;" data-i18n="settings.main_lyric">Hiện lời ở đầu trình phát chính</span>
                         <span style="font-size: calc(12px * var(--font-scale-factor, 1)); opacity: 0.6;" data-i18n="settings.main_lyric_desc">Hiển thị lyrics dòng hiện tại ngay góc đầu vùng Canvas sóng nhạc</span>
                     </div>
-                    <md-switch id="setting-main-lyric">
+                    <md-switch icons id="setting-main-lyric">
                         <span class="material-symbols-outlined" slot="on-icon">check</span>
                         <span class="material-symbols-outlined" slot="off-icon">close</span>
                     </md-switch>
@@ -1477,7 +1487,7 @@
                         <span style="font-size: calc(16px * var(--font-scale-factor, 1)); font-weight: 700;" data-i18n="settings.pip_lyric">Hiện lời ở Picture-in-picture (PiP)</span>
                         <span style="font-size: calc(12px * var(--font-scale-factor, 1)); opacity: 0.6;" data-i18n="settings.pip_lyric_desc">Đồng bộ câu chữ của file lyric trực tiếp lên trình phát PiP thu nhỏ</span>
                     </div>
-                    <md-switch id="setting-pip-lyric">
+                    <md-switch icons id="setting-pip-lyric">
                         <span class="material-symbols-outlined" slot="on-icon">check</span>
                         <span class="material-symbols-outlined" slot="off-icon">close</span>
                     </md-switch>
@@ -1488,10 +1498,88 @@
                         <span style="font-size: calc(16px * var(--font-scale-factor, 1)); font-weight: 700;" data-i18n="settings.fs_lyric">Hiện lyric ở Full screen mode</span>
                         <span style="font-size: calc(12px * var(--font-scale-factor, 1)); opacity: 0.6;" data-i18n="settings.fs_lyric_desc">Hiển thị lời bài hát ngay bên dưới tên và nghệ sĩ khi ở chế độ toàn màn hình</span>
                     </div>
-                    <md-switch id="setting-fs-lyric">
+                    <md-switch icons id="setting-fs-lyric">
                         <span class="material-symbols-outlined" slot="on-icon">check</span>
                         <span class="material-symbols-outlined" slot="off-icon">close</span>
                     </md-switch>
+                </div>
+                </div>
+                <div class="st-pane" data-pane="mixer">
+                    <h3 class="st-pane-title" data-i18n="settings.cat_mixer">Bộ trộn âm thanh</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--playlist-border);">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <span style="font-size: calc(16px * var(--font-scale-factor, 1)); font-weight: 700;" data-i18n="mixer.preamp">Khuếch đại âm lượng (Preamp)</span>
+                        <span style="font-size: calc(12px * var(--font-scale-factor, 1)); opacity: 0.6;" data-i18n="mixer.preamp_desc">Tăng hoặc giảm mức âm thanh trước khi qua các bộ lọc, từ -12 đến +12 dB</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:12px; flex-shrink:0;">
+                        <md-slider id="mixer-preamp" min="-12" max="12" step="1" value="0" labeled style="width:200px; --md-slider-active-track-color: var(--md-sys-color-primary); --md-slider-handle-color: var(--md-sys-color-primary); --md-slider-label-container-color: var(--md-sys-color-primary); --md-slider-label-label-text-color: var(--md-sys-color-on-primary); --md-slider-inactive-track-color: var(--md-sys-color-surface-variant);"></md-slider>
+                        <span id="mixer-preamp-val" style="min-width:56px; text-align:right; font-size: calc(14px * var(--font-scale-factor, 1)); font-weight:700;">0 dB</span>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--playlist-border);">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <span style="font-size: calc(16px * var(--font-scale-factor, 1)); font-weight: 700;" data-i18n="mixer.eq">Bộ chỉnh âm (Equalizer)</span>
+                        <span style="font-size: calc(12px * var(--font-scale-factor, 1)); opacity: 0.6;" data-i18n="mixer.eq_desc">Bật để áp dụng bộ chỉnh âm 5 dải bên dưới</span>
+                    </div>
+                    <md-switch icons id="mixer-eq-on">
+                        <span class="material-symbols-outlined" slot="on-icon">check</span>
+                        <span class="material-symbols-outlined" slot="off-icon">close</span>
+                    </md-switch>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 24px;">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <span style="font-size: calc(16px * var(--font-scale-factor, 1)); font-weight: 700;" data-i18n="mixer.preset">Cấu hình có sẵn</span>
+                        <span style="font-size: calc(12px * var(--font-scale-factor, 1)); opacity: 0.6;" data-i18n="mixer.preset_desc">Chọn nhanh một kiểu âm thanh, hoặc tự kéo từng dải bên dưới</span>
+                    </div>
+                    <md-outlined-select id="mixer-preset" class="m3-select">
+                        <md-select-option value="flat"><div slot="headline" data-i18n="mixer.preset_flat">Phẳng</div></md-select-option>
+                        <md-select-option value="bass"><div slot="headline" data-i18n="mixer.preset_bass">Bass mạnh</div></md-select-option>
+                        <md-select-option value="treble"><div slot="headline" data-i18n="mixer.preset_treble">Treble sáng</div></md-select-option>
+                        <md-select-option value="vocal"><div slot="headline" data-i18n="mixer.preset_vocal">Giọng hát nổi</div></md-select-option>
+                        <md-select-option value="rock"><div slot="headline" data-i18n="mixer.preset_rock">Rock</div></md-select-option>
+                        <md-select-option value="pop"><div slot="headline" data-i18n="mixer.preset_pop">Pop</div></md-select-option>
+                        <md-select-option value="custom"><div slot="headline" data-i18n="mixer.preset_custom">Tuỳ chỉnh</div></md-select-option>
+                    </md-outlined-select>
+                </div>
+                <div id="mixer-bands" style="display:flex; flex-direction:column; gap:4px; padding-bottom: 20px; border-bottom: 1px solid var(--playlist-border);">
+                    <div class="mx-band"><span class="mx-band-l">60 Hz</span><md-slider id="mixer-eq-0" min="-12" max="12" step="1" value="0" labeled style="flex:1; min-width:0; --md-slider-active-track-color: var(--md-sys-color-primary); --md-slider-handle-color: var(--md-sys-color-primary); --md-slider-label-container-color: var(--md-sys-color-primary); --md-slider-label-label-text-color: var(--md-sys-color-on-primary); --md-slider-inactive-track-color: var(--md-sys-color-surface-variant);"></md-slider><span id="mixer-eq-0-val" class="mx-band-v">0 dB</span></div>
+                    <div class="mx-band"><span class="mx-band-l">230 Hz</span><md-slider id="mixer-eq-1" min="-12" max="12" step="1" value="0" labeled style="flex:1; min-width:0; --md-slider-active-track-color: var(--md-sys-color-primary); --md-slider-handle-color: var(--md-sys-color-primary); --md-slider-label-container-color: var(--md-sys-color-primary); --md-slider-label-label-text-color: var(--md-sys-color-on-primary); --md-slider-inactive-track-color: var(--md-sys-color-surface-variant);"></md-slider><span id="mixer-eq-1-val" class="mx-band-v">0 dB</span></div>
+                    <div class="mx-band"><span class="mx-band-l">910 Hz</span><md-slider id="mixer-eq-2" min="-12" max="12" step="1" value="0" labeled style="flex:1; min-width:0; --md-slider-active-track-color: var(--md-sys-color-primary); --md-slider-handle-color: var(--md-sys-color-primary); --md-slider-label-container-color: var(--md-sys-color-primary); --md-slider-label-label-text-color: var(--md-sys-color-on-primary); --md-slider-inactive-track-color: var(--md-sys-color-surface-variant);"></md-slider><span id="mixer-eq-2-val" class="mx-band-v">0 dB</span></div>
+                    <div class="mx-band"><span class="mx-band-l">3.6 kHz</span><md-slider id="mixer-eq-3" min="-12" max="12" step="1" value="0" labeled style="flex:1; min-width:0; --md-slider-active-track-color: var(--md-sys-color-primary); --md-slider-handle-color: var(--md-sys-color-primary); --md-slider-label-container-color: var(--md-sys-color-primary); --md-slider-label-label-text-color: var(--md-sys-color-on-primary); --md-slider-inactive-track-color: var(--md-sys-color-surface-variant);"></md-slider><span id="mixer-eq-3-val" class="mx-band-v">0 dB</span></div>
+                    <div class="mx-band"><span class="mx-band-l">14 kHz</span><md-slider id="mixer-eq-4" min="-12" max="12" step="1" value="0" labeled style="flex:1; min-width:0; --md-slider-active-track-color: var(--md-sys-color-primary); --md-slider-handle-color: var(--md-sys-color-primary); --md-slider-label-container-color: var(--md-sys-color-primary); --md-slider-label-label-text-color: var(--md-sys-color-on-primary); --md-slider-inactive-track-color: var(--md-sys-color-surface-variant);"></md-slider><span id="mixer-eq-4-val" class="mx-band-v">0 dB</span></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--playlist-border);">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <span style="font-size: calc(16px * var(--font-scale-factor, 1)); font-weight: 700;" data-i18n="mixer.balance">Cân bằng trái / phải</span>
+                        <span style="font-size: calc(12px * var(--font-scale-factor, 1)); opacity: 0.6;" data-i18n="mixer.balance_desc">Chuyển âm thanh sang loa hoặc tai nghe bên trái (-100) hoặc bên phải (+100)</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:12px; flex-shrink:0;">
+                        <md-slider id="mixer-balance" min="-100" max="100" step="5" value="0" labeled style="width:200px; --md-slider-active-track-color: var(--md-sys-color-primary); --md-slider-handle-color: var(--md-sys-color-primary); --md-slider-label-container-color: var(--md-sys-color-primary); --md-slider-label-label-text-color: var(--md-sys-color-on-primary); --md-slider-inactive-track-color: var(--md-sys-color-surface-variant);"></md-slider>
+                        <span id="mixer-balance-val" style="min-width:56px; text-align:right; font-size: calc(14px * var(--font-scale-factor, 1)); font-weight:700;">0</span>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--playlist-border);">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <span style="font-size: calc(16px * var(--font-scale-factor, 1)); font-weight: 700;" data-i18n="mixer.mono">Âm thanh mono</span>
+                        <span style="font-size: calc(12px * var(--font-scale-factor, 1)); opacity: 0.6;" data-i18n="mixer.mono_desc">Gộp hai kênh trái/phải thành một, hữu ích khi chỉ nghe bằng một tai nghe</span>
+                    </div>
+                    <md-switch icons id="mixer-mono">
+                        <span class="material-symbols-outlined" slot="on-icon">check</span>
+                        <span class="material-symbols-outlined" slot="off-icon">close</span>
+                    </md-switch>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--playlist-border);">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <span style="font-size: calc(16px * var(--font-scale-factor, 1)); font-weight: 700;" data-i18n="mixer.compressor">Chuẩn hoá âm lượng</span>
+                        <span style="font-size: calc(12px * var(--font-scale-factor, 1)); opacity: 0.6;" data-i18n="mixer.compressor_desc">Nén bớt chênh lệch giữa đoạn nhỏ và đoạn lớn, hạn chế vỡ tiếng khi tăng âm</span>
+                    </div>
+                    <md-switch icons id="mixer-comp">
+                        <span class="material-symbols-outlined" slot="on-icon">check</span>
+                        <span class="material-symbols-outlined" slot="off-icon">close</span>
+                    </md-switch>
+                </div>
+                <div style="display: flex; justify-content: flex-start;">
+                    <md-text-button id="mixer-reset-btn" type="button" data-i18n="mixer.reset" style="font-family: var(--app-font); --md-text-button-label-text-font: var(--app-font);">Đặt lại bộ trộn âm thanh</md-text-button>
                 </div>
                 </div>
                 <div class="st-pane" data-pane="performance">
@@ -1501,7 +1589,7 @@
                         <span style="font-size: calc(16px * var(--font-scale-factor, 1)); font-weight: 700;" data-i18n="settings.reduce_motion">Giảm hiệu ứng chuyển động</span>
                         <span style="font-size: calc(12px * var(--font-scale-factor, 1)); opacity: 0.6;" data-i18n="settings.reduce_motion_desc">Khi bật lên, hiệu ứng chuyển động giữa các trang sẽ không còn (Ngoại trừ sóng âm, tắt ở cài đặt riêng)</span>
                     </div>
-                    <md-switch id="setting-reduce-motion">
+                    <md-switch icons id="setting-reduce-motion">
                         <span class="material-symbols-outlined" slot="on-icon">check</span>
                         <span class="material-symbols-outlined" slot="off-icon">close</span>
                     </md-switch>
@@ -1512,7 +1600,7 @@
                         <span style="font-size: calc(16px * var(--font-scale-factor, 1)); font-weight: 700;" data-i18n="settings.reduce_effects">Giảm hiệu ứng mờ và chuyển động (Nâng cao)</span>
                         <span style="font-size: calc(12px * var(--font-scale-factor, 1)); opacity: 0.6;" data-i18n="settings.reduce_effects_desc">Sẽ giảm các hiệu ứng mờ, chuyển động và xóa sóng nhạc, hữu ích khi máy có cấu hình thấp vcl.</span>
                     </div>
-                    <md-switch id="setting-reduce-effects">
+                    <md-switch icons id="setting-reduce-effects">
                         <span class="material-symbols-outlined" slot="on-icon">check</span>
                         <span class="material-symbols-outlined" slot="off-icon">close</span>
                     </md-switch>
@@ -1739,7 +1827,7 @@
         <div class="top-bar">
             <div class="brand">
                 <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">library_music</span>
-                <span>AUDIOPLAYER V2026.10.17-build093944</span>
+                <span>AUDIOPLAYER V2026.11.6-build113044</span>
             </div>
             <div style="display: flex; gap: 8px; position: relative;">
                 <div class="install-wrapper" id="install-wrapper">
@@ -4693,11 +4781,8 @@
             }
         });
 
-        // Khi Shuffle đang bật: bấm 1 lần Previous chỉ tua bài hiện tại về 0:00 (giống các
-        // trình phát nhạc khác khi đang random), bấm ĐÚP (trong 350ms) mới thật sự lùi về
-        // bài trước đó trong shuffleOrder. Khi Shuffle tắt thì giữ nguyên hành vi cũ.
-        let prevBtnClickTimer = null;
-        let prevBtnClickCount = 0;
+        // Khi Shuffle đang bật: nếu bài đã phát quá 5 giây thì Previous chỉ tua về 0:00,
+        // còn trong 5 giây đầu thì lùi về bài trước đó trong shuffleOrder. Shuffle tắt thì giữ như cũ.
         document.getElementById('prev-btn').addEventListener('click', () => {
             if (isEditorOpen()) return;   // đang chỉnh sửa: khoá chuyển bài
             if (!isShuffle) {
@@ -4705,23 +4790,12 @@
                 playTrack(p);
                 return;
             }
-
-            prevBtnClickCount++;
-            if (prevBtnClickCount === 1) {
-                prevBtnClickTimer = setTimeout(() => {
-                    audio.currentTime = 0;
-                    prevBtnClickCount = 0;
-                }, 350);
-            } else {
-                clearTimeout(prevBtnClickTimer);
-                prevBtnClickCount = 0;
-
-                if (!shuffleInitialized) generateShuffleOrder();
-                if (shuffleOrder.length === 0) return;
-                let pos = shuffleOrder.indexOf(currentIndex);
-                pos = pos - 1; if (pos < 0) pos = shuffleOrder.length - 1;
-                playTrack(shuffleOrder[pos]);
-            }
+            if (audio.currentTime > 5) { audio.currentTime = 0; return; }
+            if (!shuffleInitialized) generateShuffleOrder();
+            if (shuffleOrder.length === 0) return;
+            let pos = shuffleOrder.indexOf(currentIndex);
+            pos = pos - 1; if (pos < 0) pos = shuffleOrder.length - 1;
+            playTrack(shuffleOrder[pos]);
         });
 
         // --- NÚT SHUFFLE: bật/tắt + chuyển đổi hiển thị tab Playlist/Shuffle ---
@@ -4838,12 +4912,48 @@
         });
 
         let audioCtx, analyser, dataArray;
+
+        // --- BỘ TRỘN ÂM THANH (Web Audio): preamp -> EQ 5 dải -> mono -> nén -> cân bằng L/R -> analyser -> loa ---
+        const MIXER_FREQS = [60, 230, 910, 3600, 14000];
+        const MIXER_PRESETS = { flat: [0,0,0,0,0], bass: [7,4,0,0,0], treble: [0,0,0,4,7], vocal: [-2,0,4,3,0], rock: [5,3,-2,2,5], pop: [-1,2,4,2,-1] };
+        const MIXER_DEFAULT = { preamp: 0, eqOn: true, eq: [0,0,0,0,0], preset: 'flat', balance: 0, mono: false, comp: false };
+        let mixer = (() => {
+            try { const o = JSON.parse(localStorage.getItem('settings_mixer') || 'null'); if (o && typeof o === 'object') return Object.assign({}, MIXER_DEFAULT, o, { eq: (Array.isArray(o.eq) && o.eq.length === 5) ? o.eq.map(Number) : [0,0,0,0,0] }); } catch (e) {}
+            return JSON.parse(JSON.stringify(MIXER_DEFAULT));
+        })();
+        function mixerSave() { try { localStorage.setItem('settings_mixer', JSON.stringify(mixer)); } catch (e) {} }
+        let mx = null;
+        function mixerBuild(source) {
+            mx = { source,
+                pre: audioCtx.createGain(),
+                eq: MIXER_FREQS.map((f, i) => { const b = audioCtx.createBiquadFilter(); b.type = i === 0 ? 'lowshelf' : i === 4 ? 'highshelf' : 'peaking'; b.frequency.value = f; b.Q.value = 1; return b; }),
+                mono: audioCtx.createGain(),
+                comp: audioCtx.createDynamicsCompressor(),
+                pan: audioCtx.createStereoPanner() };
+            mx.mono.channelCount = 1; mx.mono.channelCountMode = 'explicit'; mx.mono.channelInterpretation = 'speakers';
+            mixerApply();
+        }
+        function mixerApply() {
+            if (!mx) return;
+            const nodes = [mx.source, mx.pre, ...mx.eq, mx.mono, mx.comp, mx.pan, analyser];
+            nodes.forEach(n => { try { n.disconnect(); } catch (e) {} });
+            const chain = [mx.source, mx.pre];
+            if (mixer.eqOn) chain.push(...mx.eq);
+            if (mixer.mono) chain.push(mx.mono);
+            if (mixer.comp) chain.push(mx.comp);
+            chain.push(mx.pan, analyser);
+            for (let i = 0; i < chain.length - 1; i++) chain[i].connect(chain[i + 1]);
+            analyser.connect(audioCtx.destination);
+            mx.pre.gain.value = Math.pow(10, mixer.preamp / 20);
+            mx.eq.forEach((b, i) => { b.gain.value = mixer.eq[i] || 0; });
+            mx.pan.pan.value = Math.max(-1, Math.min(1, mixer.balance / 100));
+        }
         function initVisualizer() {
             if (audioCtx) return;
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             analyser = audioCtx.createAnalyser();
             const source = audioCtx.createMediaElementSource(audio);
-            source.connect(analyser); analyser.connect(audioCtx.destination);
+            mixerBuild(source);
             analyser.fftSize = 256;
             dataArray = new Uint8Array(analyser.frequencyBinCount);
             draw();
@@ -5936,6 +6046,27 @@
 
         window.__tr = k => (typeof currentLangDict !== 'undefined' && currentLangDict) ? currentLangDict[k] : undefined;
         const EN_FALLBACK = {
+            "settings.cat_mixer": "Audio mixer",
+            "mixer.preamp": "Volume boost (Preamp)",
+            "mixer.preamp_desc": "Raise or lower the level before the filters, from -12 to +12 dB",
+            "mixer.eq": "Equalizer",
+            "mixer.eq_desc": "Turn on to apply the 5-band equalizer below",
+            "mixer.preset": "Presets",
+            "mixer.preset_desc": "Pick a sound style quickly, or drag each band below yourself",
+            "mixer.preset_flat": "Flat",
+            "mixer.preset_bass": "Bass boost",
+            "mixer.preset_treble": "Bright treble",
+            "mixer.preset_vocal": "Vocal boost",
+            "mixer.preset_rock": "Rock",
+            "mixer.preset_pop": "Pop",
+            "mixer.preset_custom": "Custom",
+            "mixer.balance": "Left / right balance",
+            "mixer.balance_desc": "Shift the sound to the left (-100) or right (+100) speaker or earbud",
+            "mixer.mono": "Mono audio",
+            "mixer.mono_desc": "Merge the left and right channels into one, useful when using a single earbud",
+            "mixer.compressor": "Normalize volume",
+            "mixer.compressor_desc": "Squeezes the gap between quiet and loud parts and helps prevent distortion when boosting",
+            "mixer.reset": "Reset audio mixer",
             'metaeditor.lrc_title': '🔍 Find lyrics (lrclib.net)', 'metaeditor.lrc_placeholder': 'Song, artist...',
             'metaeditor.lrc_hint': 'Type a song name to find lyrics.', 'metaeditor.lrc_searching': 'Searching...',
             'metaeditor.lrc_none': 'No results found.', 'metaeditor.lrc_error': 'Could not reach lrclib.net. Check your connection and try again.',
@@ -6168,6 +6299,44 @@
             }
         });
 
+        // --- Bộ trộn âm thanh: giao diện ---
+        {
+            const $ = id => document.getElementById(id);
+            const fmtDb = v => (v > 0 ? '+' : '') + v + ' dB';
+            const fmtBal = v => v === 0 ? 'C' : (v < 0 ? 'L ' + (-v) : 'R ' + v);
+            const preS = $('mixer-preamp'), balS = $('mixer-balance'), eqOn = $('mixer-eq-on'), monoS = $('mixer-mono'), compS = $('mixer-comp'), presetS = $('mixer-preset');
+            const eqS = [0,1,2,3,4].map(i => $('mixer-eq-' + i));
+            function sync() {
+                preS.value = mixer.preamp; $('mixer-preamp-val').textContent = fmtDb(mixer.preamp);
+                balS.value = mixer.balance; $('mixer-balance-val').textContent = fmtBal(mixer.balance);
+                eqOn.selected = mixer.eqOn; monoS.selected = mixer.mono; compS.selected = mixer.comp;
+                eqS.forEach((sl, i) => { sl.value = mixer.eq[i]; $('mixer-eq-' + i + '-val').textContent = fmtDb(mixer.eq[i]); sl.disabled = !mixer.eqOn; });
+                $('mixer-bands').style.opacity = mixer.eqOn ? '' : '.45';
+                presetS.disabled = !mixer.eqOn;
+                presetS.value = mixer.preset;
+            }
+            function changed() { mixerSave(); mixerApply(); }
+            function detectPreset() {
+                const k = Object.keys(MIXER_PRESETS).find(n => MIXER_PRESETS[n].every((v, i) => v === mixer.eq[i]));
+                mixer.preset = k || 'custom';
+            }
+            preS.addEventListener('input', () => { mixer.preamp = +preS.value; $('mixer-preamp-val').textContent = fmtDb(mixer.preamp); changed(); });
+            balS.addEventListener('input', () => { mixer.balance = +balS.value; $('mixer-balance-val').textContent = fmtBal(mixer.balance); changed(); });
+            eqS.forEach((sl, i) => sl.addEventListener('input', () => {
+                mixer.eq[i] = +sl.value; $('mixer-eq-' + i + '-val').textContent = fmtDb(mixer.eq[i]);
+                detectPreset(); presetS.value = mixer.preset; changed();
+            }));
+            eqOn.addEventListener('change', () => { mixer.eqOn = eqOn.selected; sync(); changed(); });
+            monoS.addEventListener('change', () => { mixer.mono = monoS.selected; changed(); });
+            compS.addEventListener('change', () => { mixer.comp = compS.selected; changed(); });
+            presetS.addEventListener('change', () => {
+                const v = presetS.value;
+                if (MIXER_PRESETS[v]) { mixer.eq = MIXER_PRESETS[v].slice(); mixer.preset = v; sync(); changed(); }
+            });
+            $('mixer-reset-btn').addEventListener('click', () => { mixer = JSON.parse(JSON.stringify(MIXER_DEFAULT)); sync(); changed(); });
+            sync();
+        }
+
         settingTheme.addEventListener('change', (e) => {
             settings.theme = e.target.value;
             localStorage.setItem('settings_theme', settings.theme);
@@ -6282,7 +6451,7 @@
              'settings_font_scale_sync','settings_language','settings_output_device','settings_playback_speed',
              'settings_reduce_effects','settings_reduce_motion','settings_repeat_mode','settings_show_fs_lyric',
              'settings_show_main_lyric','settings_show_pip_lyric','settings_shuffle','settings_theme','settings_ui_scale',
-             'settings_volume','settings_wake_lock','getting_started_done','getting_started_pending'
+             'settings_volume','settings_wake_lock','settings_mixer','getting_started_done','getting_started_pending'
             ].forEach(k => { try { localStorage.removeItem(k); } catch (e) {} });
             try { localStorage.setItem('getting_started_pending', '1'); } catch (e) {}
             try {
@@ -7729,7 +7898,7 @@
                     + ' ' + pad2(nowDt.getHours()) + ':' + pad2(nowDt.getMinutes()) + ':' + pad2(nowDt.getSeconds());
 
                 var versionEl = document.querySelector('.top-bar .brand span:not(.material-symbols-outlined)');
-                var versionText = versionEl && versionEl.innerText.trim() ? versionEl.innerText.trim() : 'AUDIOPLAYER V2026.10.17-build093944';
+                var versionText = versionEl && versionEl.innerText.trim() ? versionEl.innerText.trim() : 'AUDIOPLAYER V2026.11.6-build113044';
 
                 var reportSubject = 'Lỗi khẩn cấp về Audio Player';
                 var reportBody = 'Loại: Báo cáo lỗi\n'

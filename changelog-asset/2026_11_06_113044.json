@@ -1,0 +1,31 @@
+{
+  "date": "2026-11-06",
+  "vi": [
+    {
+      "content": "Thêm tab \"Bộ trộn âm thanh\" trong Cài đặt: khuếch đại, chỉnh âm 5 dải có cấu hình sẵn, cân bằng trái/phải, mono, chuẩn hoá âm lượng",
+      "icon": "equalizer"
+    },
+    {
+      "content": "Khi bật Shuffle, nút Previous sẽ lùi về bài trước trong 5 giây đầu, quá 5 giây thì tua về 0:00",
+      "icon": "skip_previous"
+    },
+    {
+      "content": "Công tắc mới: chấm tròn luôn cùng kích thước, có icon \"x\" khi tắt và dấu tick khi bật",
+      "icon": "toggle_on"
+    }
+  ],
+  "en": [
+    {
+      "content": "Added an \"Audio mixer\" tab in Settings: preamp, 5-band equalizer with presets, left/right balance, mono, volume normalization",
+      "icon": "equalizer"
+    },
+    {
+      "content": "With Shuffle on, Previous goes to the previous track in the first 5 seconds, and restarts the song to 0:00 after that",
+      "icon": "skip_previous"
+    },
+    {
+      "content": "Redesigned switches: the knob stays the same size, with an \"x\" icon when off and a tick when on",
+      "icon": "toggle_on"
+    }
+  ]
+}
