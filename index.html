@@ -400,7 +400,7 @@
         body.has-video .visual-stage { background: #000; }
         /* Full screen + video: bỏ bìa to ở giữa, đưa tên bài/lyric xuống dưới để không che hình */
         body.has-video #fs-cover-wrap, body.has-video #fs-title, body.has-video #fs-artist { display: none !important; }
-        body.has-video.fullscreen-active #fs-stage-overlay { background: linear-gradient(transparent 55%, rgba(0,0,0,.65)) !important; justify-content: flex-end !important; padding-bottom: 150px !important; pointer-events: none; }
+        body.has-video.fullscreen-active #fs-stage-overlay { background: none !important; justify-content: flex-end !important; padding-bottom: 150px !important; pointer-events: none; }
         body.has-video.fullscreen-active #fs-lyric { min-height: 0 !important; }
 
         /* --- STREAMING_CHUNK:Designing fullscreen and layout styles... --- */
@@ -7745,9 +7745,25 @@
             }
         }
 
-        function resetFsIdleTimer() {
+        function resetFsIdleTimer(e) {
+            // Video: sau khi bấm vào khung phát để ẩn, chỉ khi chuột thật sự di chuyển mới hiện lại
+            if (e && e.type === 'click' && fsClickHidden) return;
+            if (e && e.type === 'mousemove' && fsClickHidden && !e.movementX && !e.movementY) return;
+            fsClickHidden = false;
             startFsIdleTimer();
         }
+        let fsClickHidden = false;
+        // Video ở Full screen: bấm 1 lần vào khung phát (trừ thanh media control và nút Full screen) -> ẩn control + con trỏ
+        document.addEventListener('click', (e) => {
+            const b = document.body;
+            if (!b.classList.contains('fullscreen-active') || !b.classList.contains('has-video')) return;
+            if (e.target.closest('.player-shell, #fullscreen-btn')) return;
+            if (!e.target.closest('.visual-stage')) return;
+            clearTimeout(fsIdleTimer);
+            fsClickHidden = true;
+            document.querySelector('.player-shell').classList.add('controls-hidden');
+            b.classList.add('fs-cursor-hidden');
+        });
 
         async function toggleFullscreen() {
             const container = document.documentElement;
