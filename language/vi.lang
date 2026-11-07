@@ -365,3 +365,4 @@ mixer.mono_desc=Gộp hai kênh trái/phải thành một, hữu ích khi chỉ 
 mixer.compressor=Chuẩn hoá âm lượng
 mixer.compressor_desc=Nén bớt chênh lệch giữa đoạn nhỏ và đoạn lớn, hạn chế vỡ tiếng khi tăng âm
 mixer.reset=Đặt lại bộ trộn âm thanh
+player.video_no_edit=Tệp video chưa hỗ trợ chỉnh sửa thẻ và ảnh bìa

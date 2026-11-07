@@ -32,8 +32,24 @@
     {
       "action": "/music-player/index.html",
       "accept": {
-        "audio/*": [".mp3", ".wav", ".ogg", ".m4a", ".flac"],
-        "text/plain": [".lrc"]
+        "audio/*": [
+          ".mp3",
+          ".wav",
+          ".ogg",
+          ".m4a",
+          ".flac"
+        ],
+        "text/plain": [
+          ".lrc"
+        ],
+        "video/*": [
+          ".mp4",
+          ".m4v",
+          ".webm",
+          ".mkv",
+          ".mov",
+          ".ogv"
+        ]
       }
     }
   ],

@@ -393,6 +393,16 @@
         .visual-stage { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; border-radius: 32px; overflow: hidden; transition: var(--m3-transition); }
         #visualizer { width: 100%; height: 100%; border-radius: 32px; z-index: 2; position: absolute; inset: 0;}
 
+        /* --- Video: hiện hình ngay trong khung chính (và cả khi Full screen) --- */
+        #audio-element { display: none; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #000; z-index: 1; border-radius: inherit; }
+        body.has-video #audio-element { display: block; }
+        body.has-video #visualizer, body.has-video #bg-preview { display: none !important; }
+        body.has-video .visual-stage { background: #000; }
+        /* Full screen + video: bỏ bìa to ở giữa, đưa tên bài/lyric xuống dưới để không che hình */
+        body.has-video #fs-cover-wrap { display: none !important; }
+        body.has-video.fullscreen-active #fs-stage-overlay { background: linear-gradient(transparent 55%, rgba(0,0,0,.65)) !important; justify-content: flex-end !important; padding-bottom: 150px !important; pointer-events: none; }
+        body.has-video.fullscreen-active #fs-lyric { min-height: 0 !important; }
+
         /* --- STREAMING_CHUNK:Designing fullscreen and layout styles... --- */
         /* --- IMMERSIVE FULL SCREEN STYLES --- */
         body.fullscreen-active {
@@ -1921,6 +1931,8 @@
                     <p style="font-family:'Minecraft'; font-size: calc(10px * var(--font-scale-factor, 1)); margin-top:12px; opacity: 0.2">DRAG ASSETS OR CLICK + TO START</p>
                 </div>
                 <div id="bg-preview" class="bg-thumb-preview"></div>
+                <!-- Thẻ phát chính. Dùng <video> để phát được cả nhạc lẫn video; chỉ hiện hình khi tệp có hình -->
+                <video id="audio-element" playsinline></video>
                 <canvas id="visualizer"></canvas>
                 <div id="top-active-lyric" class="top-active-lyric"></div>
                 
@@ -2034,11 +2046,10 @@
         </button>
     </div>
 
-    <input type="file" id="file-input" class="hidden" accept="audio/*, .lrc" multiple>
+    <input type="file" id="file-input" class="hidden" accept="audio/*,video/*,.mkv,.lrc" multiple>
     <input type="file" id="lrc-manual-input" class="hidden" accept=".lrc">
     <!-- Input nạp thumbnail ẩn -->
     <input type="file" id="thumb-file-input" class="hidden" accept="image/*">
-    <audio id="audio-element"></audio>
 
     <!-- Mẫu Template HTML chứa cấu trúc trang edit_metadata.html của Phong -->
     <template id="metadata-editor-template">
@@ -4046,6 +4057,32 @@
             try { await handleFilesInner(files); }
             finally { if (playlist.length > before) addBtnDone(); else addBtnCancel(); }
         }
+        // Tệp phát được: nhạc hoặc video (mp4, webm, mkv, mov...). Trình duyệt giải mã được codec nào thì phát codec đó.
+        const VIDEO_EXTS = ['mp4', 'm4v', 'webm', 'mkv', 'mov', 'ogv', '3gp', 'avi'];
+        const fileExt = f => (f.name.split('.').pop() || '').toLowerCase();
+        const isVideoFile = f => (f.type || '').startsWith('video/') || VIDEO_EXTS.includes(fileExt(f));
+        // Chụp 1 khung hình của video để làm ảnh bìa trong danh sách phát (tối đa ~4 giây, lỗi thì bỏ qua)
+        function captureVideoFrame(url) {
+            return new Promise(resolve => {
+                const v = document.createElement('video');
+                v.muted = true; v.preload = 'auto'; v.playsInline = true;
+                let done = false;
+                const finish = val => { if (done) return; done = true; clearTimeout(t); v.removeAttribute('src'); v.load(); resolve(val); };
+                const t = setTimeout(() => finish(null), 4000);
+                v.addEventListener('error', () => finish(null));
+                v.addEventListener('loadedmetadata', () => { try { v.currentTime = Math.min(1, (v.duration || 2) * 0.1); } catch (e) { finish(null); } });
+                v.addEventListener('seeked', () => {
+                    try {
+                        if (!v.videoWidth) return finish(null);
+                        const w = 480, h = Math.max(1, Math.round(w * v.videoHeight / v.videoWidth));
+                        const c = document.createElement('canvas'); c.width = w; c.height = h;
+                        c.getContext('2d').drawImage(v, 0, 0, w, h);
+                        finish(c.toDataURL('image/jpeg', 0.8));
+                    } catch (e) { finish(null); }
+                });
+                v.src = url;
+            });
+        }
         async function handleFilesInner(files) {
             const audioFiles = [];
             const lrcFiles = [];
@@ -4053,7 +4090,7 @@
             
             Array.from(files).forEach(file => {
                 if (file.name.toLowerCase().endsWith('.lrc')) lrcFiles.push(file);
-                else if (file.type.startsWith('audio/') || file.name.toLowerCase().endsWith('.mp3') || file.name.toLowerCase().endsWith('.m4a')) audioFiles.push(file);
+                else if (file.type.startsWith('audio/') || isVideoFile(file) || file.name.toLowerCase().endsWith('.mp3') || file.name.toLowerCase().endsWith('.m4a')) audioFiles.push(file);
             });
 
             for (const file of audioFiles) {
@@ -4099,6 +4136,10 @@
                     });
                 });
 
+                const url = URL.createObjectURL(file);
+                const videoFile = isVideoFile(file);
+                if (videoFile && !cover) cover = await captureVideoFrame(url);
+
                 const existingIndex = playlist.findIndex(t => 
                     t.name.toLowerCase() === title.toLowerCase() && 
                     t.artist.toLowerCase() === artist.toLowerCase()
@@ -4115,7 +4156,8 @@
                         genre: genre,
                         composer: composer,
                         cover: cover,
-                        url: URL.createObjectURL(file),
+                        url: url,
+                        isVideo: videoFile,
                         ext: file.name.split('.').pop().toUpperCase(),
                         lyrics: lyricsRaw ? parseLRC(lyricsRaw) : null,
                         lyricsRaw: lyricsRaw || "",
@@ -4660,6 +4702,7 @@
             if (index < 0 || index >= playlist.length) return;
             currentIndex = index;
             const track = playlist[index];
+            document.body.classList.remove('has-video');   // sẽ bật lại khi loadedmetadata báo tệp có hình
             audio.src = track.url;
             trackNameEl.innerText = track.name;
             trackArtistEl.innerText = `${track.artist} | ${track.ext}`;
@@ -6046,6 +6089,7 @@
 
         window.__tr = k => (typeof currentLangDict !== 'undefined' && currentLangDict) ? currentLangDict[k] : undefined;
         const EN_FALLBACK = {
+            'player.video_no_edit': "Video files don't support tag or cover editing yet",
             "settings.cat_mixer": "Audio mixer",
             "mixer.preamp": "Volume boost (Preamp)",
             "mixer.preamp_desc": "Raise or lower the level before the filters, from -12 to +12 dB",
@@ -6803,8 +6847,8 @@
                 const fileHandles = await window.showOpenFilePicker({
                     multiple: true,
                     types: [{
-                        description: 'Audio Files',
-                        accept: { 'audio/*': ['.mp3', '.ogg', '.wav', '.m4a'] }
+                        description: 'Audio / Video',
+                        accept: { 'audio/*': ['.mp3', '.ogg', '.wav', '.m4a', '.flac'], 'video/*': ['.mp4', '.m4v', '.webm', '.mkv', '.mov', '.ogv'] }
                     }]
                 });
                 const files = [];
@@ -6859,6 +6903,10 @@
             e.stopPropagation();
             if (currentIndex === -1) {
                 showToast(currentLangDict['player.load_first_prompt'] || "Hãy nạp tệp nhạc và phát để sử dụng trình chỉnh sửa!");
+                return;
+            }
+            if (playlist[currentIndex] && playlist[currentIndex].isVideo) {
+                showToast(currentLangDict['player.video_no_edit'] || 'Tệp video chưa hỗ trợ chỉnh sửa thẻ và ảnh bìa');
                 return;
             }
             editOptionsModal.classList.add('open');
@@ -7095,6 +7143,7 @@
         // Test nền: mỗi khi audio nạp xong metadata thành công -> bài hát này "mở được",
         // bật nút; nếu audio báo lỗi (file hỏng/không hỗ trợ) -> giữ nút tắt (xám)
         audio.addEventListener('loadedmetadata', () => {
+            document.body.classList.toggle('has-video', audio.videoWidth > 0);
             const track = playlist[currentIndex];
             if (track) track.canOpen = true;
             updateMoreInfoBtnState();

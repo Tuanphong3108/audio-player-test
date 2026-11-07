@@ -365,3 +365,4 @@ mixer.mono_desc=Merge the left and right channels into one, useful when using a 
 mixer.compressor=Normalize volume
 mixer.compressor_desc=Squeezes the gap between quiet and loud parts and helps prevent distortion when boosting
 mixer.reset=Reset audio mixer
+player.video_no_edit=Video files don't support tag or cover editing yet

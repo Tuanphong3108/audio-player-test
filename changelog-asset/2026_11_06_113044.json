@@ -2,6 +2,10 @@
   "date": "2026-11-06",
   "vi": [
     {
+      "content": "Hỗ trợ phát video (mp4, webm, mkv, mov...): hình hiện ngay trong khung chính và cả khi Full screen",
+      "icon": "movie"
+    },
+    {
       "content": "Thêm tab \"Bộ trộn âm thanh\" trong Cài đặt: khuếch đại, chỉnh âm 5 dải có cấu hình sẵn, cân bằng trái/phải, mono, chuẩn hoá âm lượng",
       "icon": "equalizer"
     },
@@ -15,6 +19,10 @@
     }
   ],
   "en": [
+    {
+      "content": "Added video playback (mp4, webm, mkv, mov...): the picture shows in the main stage and in Full screen",
+      "icon": "movie"
+    },
     {
       "content": "Added an \"Audio mixer\" tab in Settings: preamp, 5-band equalizer with presets, left/right balance, mono, volume normalization",
       "icon": "equalizer"
