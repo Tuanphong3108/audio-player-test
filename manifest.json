@@ -1,28 +1,28 @@
 {
-  "name": "Audio Player",
-  "short_name": "Audio Player",
-  "id": "/music-player/",
-  "start_url": "/music-player/index.html",
-  "scope": "/music-player/",
+  "name": "Media Player",
+  "short_name": "Media Player",
+  "id": "/audio-player-test/",
+  "start_url": "/audio-player-test/index.html",
+  "scope": "/audio-player-test/",
   "display": "standalone",
   "background_color": "#1C1B1F",
   "theme_color": "#D0BCFF",
-  "description": "Material Design 3 Expressive Audio Player with Real-time Visuals",
+  "description": "Material Design 3 Expressive Media Player with Real-time Visuals",
   "icons": [
     {
-      "src": "/music-player/music_note.png",
+      "src": "/audio-player-test/music_note.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/music-player/music_note.png",
+      "src": "/audio-player-test/music_note.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/music-player/music_note.png",
+      "src": "/audio-player-test/music_note.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -30,7 +30,7 @@
   ],
   "file_handlers": [
     {
-      "action": "/music-player/index.html",
+      "action": "/audio-player-test/index.html",
       "accept": {
         "audio/*": [
           ".mp3",

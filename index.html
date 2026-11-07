@@ -33,12 +33,12 @@
         var vi = /^vi/i.test((function () { try { return localStorage.getItem('settings_language') || navigator.language || ''; } catch (e) { return navigator.language || ''; } })());
         var T = vi ? {
             t: 'Thiết bị không được hỗ trợ',
-            d: 'Audio Player yêu cầu tối thiểu trình duyệt Chromium (Chrome, Edge, Opera, Brave...) trên máy tính hoặc laptop.',
+            d: 'Media Player yêu cầu tối thiểu trình duyệt Chromium (Chrome, Edge, Opera, Brave...) trên máy tính hoặc laptop.',
             n: 'Điện thoại và máy tính bảng Android/iPad bị chặn hoàn toàn, kể cả khi bật "Trang web cho máy tính".',
             r: { browser: 'Trình duyệt hiện tại không phải Chromium.', device: 'Thiết bị hiện tại không phải máy tính/laptop.' }
         } : {
             t: 'Device not supported',
-            d: 'Audio Player requires at least a Chromium browser (Chrome, Edge, Opera, Brave...) on a PC or laptop.',
+            d: 'Media Player requires at least a Chromium browser (Chrome, Edge, Opera, Brave...) on a PC or laptop.',
             n: 'Phones and tablets are blocked entirely, even with "Desktop site" turned on.',
             r: { browser: 'Your current browser is not Chromium.', device: 'Your current device is not a PC/laptop.' }
         };
@@ -72,7 +72,7 @@
     <meta charset="UTF-8">
     <meta id="theme-meta" name="theme-color" content="#1C1B1F">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio Player</title>
+    <title>Media Player</title>
     <link rel="icon" type="image/png" href="music_note.png">
     <link rel="manifest" href="manifest.json">
     
@@ -399,7 +399,7 @@
         body.has-video #visualizer, body.has-video #bg-preview { display: none !important; }
         body.has-video .visual-stage { background: #000; }
         /* Full screen + video: bỏ bìa to ở giữa, đưa tên bài/lyric xuống dưới để không che hình */
-        body.has-video #fs-cover-wrap { display: none !important; }
+        body.has-video #fs-cover-wrap, body.has-video #fs-title, body.has-video #fs-artist { display: none !important; }
         body.has-video.fullscreen-active #fs-stage-overlay { background: linear-gradient(transparent 55%, rgba(0,0,0,.65)) !important; justify-content: flex-end !important; padding-bottom: 150px !important; pointer-events: none; }
         body.has-video.fullscreen-active #fs-lyric { min-height: 0 !important; }
 
@@ -1837,7 +1837,7 @@
         <div class="top-bar">
             <div class="brand">
                 <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">library_music</span>
-                <span>AUDIOPLAYER V2026.11.6-build113044</span>
+                <span>MEDIAPLAYER V2026.11.6-build113044</span>
             </div>
             <div style="display: flex; gap: 8px; position: relative;">
                 <div class="install-wrapper" id="install-wrapper">
@@ -6981,7 +6981,7 @@
             feedbackError.style.display = 'none';
 
             const feedbackType = feedbackTypeSuggestion.checked ? 'Gợi ý tính năng' : 'Báo cáo lỗi';
-            const subject = 'Phản hồi về Audio Player';
+            const subject = 'Phản hồi về Media Player';
             const timeStr = formatFeedbackTimestamp(new Date());
 
             let body;
@@ -6994,7 +6994,7 @@
                 body = 'Loại: ' + feedbackType + '\n'
                     + 'Nội dung: ' + content + '\n'
                     + '────────────────────────────\n'
-                    + 'Audio Player Version:\n' + getAppVersionText() + '\n'
+                    + 'Media Player Version:\n' + getAppVersionText() + '\n'
                     + 'Language: ' + (localStorage.getItem('settings_language') || 'vi') + '\n'
                     + 'UI scale: ' + (localStorage.getItem('settings_ui_scale') || '100') + '%\n'
                     + 'Font scale: ' + (localStorage.getItem('settings_font_scale') || '100') + '%\n'
@@ -7012,13 +7012,13 @@
                     + 'Browser:\n' + getBrowserInfo() + '\n'
                     + 'Platform:\n' + getPlatformInfo() + '\n'
                     + 'Thời gian:\n' + timeStr + '\n'
-                    + '[Nội dung email được tạo tự động từ hệ thống của Audio Player]';
+                    + '[Nội dung email được tạo tự động từ hệ thống của Media Player]';
             } else {
                 body = 'Loại: ' + feedbackType + '\n'
                     + 'Nội dung: ' + content + '\n'
                     + 'Người dùng không cung cấp thông tin hệ thống\n'
                     + 'Thời gian:\n' + timeStr + '\n'
-                    + '[Nội dung email được tạo tự động từ hệ thống của Audio Player]';
+                    + '[Nội dung email được tạo tự động từ hệ thống của Media Player]';
             }
 
             // Hỏi người dùng muốn gửi bằng dịch vụ mail nào
@@ -7947,15 +7947,15 @@
                     + ' ' + pad2(nowDt.getHours()) + ':' + pad2(nowDt.getMinutes()) + ':' + pad2(nowDt.getSeconds());
 
                 var versionEl = document.querySelector('.top-bar .brand span:not(.material-symbols-outlined)');
-                var versionText = versionEl && versionEl.innerText.trim() ? versionEl.innerText.trim() : 'AUDIOPLAYER V2026.11.6-build113044';
+                var versionText = versionEl && versionEl.innerText.trim() ? versionEl.innerText.trim() : 'MEDIAPLAYER V2026.11.6-build113044';
 
-                var reportSubject = 'Lỗi khẩn cấp về Audio Player';
+                var reportSubject = 'Lỗi khẩn cấp về Media Player';
                 var reportBody = 'Loại: Báo cáo lỗi\n'
-                    + 'Nội dung: Audio Player không thể tải được, màn hình bị kẹt cứng ở Loading và không thể vào giao diện chính\n'
+                    + 'Nội dung: Media Player không thể tải được, màn hình bị kẹt cứng ở Loading và không thể vào giao diện chính\n'
                     + '────────────────────────────\n'
-                    + 'Audio Player Version:\n' + versionText + '\n'
+                    + 'Media Player Version:\n' + versionText + '\n'
                     + 'Thời gian:\n' + timeStr + '\n'
-                    + '[Nội dung email được tạo tự động từ hệ thống của Audio Player]';
+                    + '[Nội dung email được tạo tự động từ hệ thống của Media Player]';
 
                 loadingReportBtn.href = 'mailto:phongvn406@gmail.com?subject=' + encodeURIComponent(reportSubject) + '&body=' + encodeURIComponent(reportBody);
             }

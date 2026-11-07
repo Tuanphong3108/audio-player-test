@@ -2,6 +2,10 @@
   "date": "2026-11-06",
   "vi": [
     {
+      "content": "Đổi tên ứng dụng từ Audio Player thành Media Player",
+      "icon": "edit"
+    },
+    {
       "content": "Hỗ trợ phát video (mp4, webm, mkv, mov...): hình hiện ngay trong khung chính và cả khi Full screen",
       "icon": "movie"
     },
@@ -19,6 +23,10 @@
     }
   ],
   "en": [
+    {
+      "content": "Renamed the app from Audio Player to Media Player",
+      "icon": "edit"
+    },
     {
       "content": "Added video playback (mp4, webm, mkv, mov...): the picture shows in the main stage and in Full screen",
       "icon": "movie"
